@@ -1,8 +1,7 @@
 import tkinter as tk
-from tkinter import RIGHT, Y
 
-from db import checkLogin, getEntries, signupInsert, store_collec, login_collec
 from Passobj import Passobj
+from db import checkLogin, getEntries, signupInsert
 
 
 class UI:
