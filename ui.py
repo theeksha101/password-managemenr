@@ -29,30 +29,21 @@ class UI:
         sign_up = tk.Button(self.frame, text='Sign Up', bg='white', command=self.sign_up).place(x=250, y=100)
         go_back = tk.Button(self.frame, text='Exit', bg='white', command=self.frame.destroy).place(x=250, y=150)
 
-        # login_button.grid(row=0, column=1)
-        # sign_up.grid(row=1, column=1)
-        # go_back.grid(row=2, column=1)
-
         self.frame.mainloop()
 
     def show_options(self):
         self.clear()
 
-        button_show_pass = tk.Button(self.frame, text='Show All Entries', font=('calibre', 10, 'bold'),
-                                     command=lambda: self.printEntries(all=True))
-        button_add_pass = tk.Button(self.frame, text='Add Password', font=('calibre', 10, 'bold'),
-                                    command=lambda: self.getEntry())
-        button_edit_pass = tk.Button(self.frame, text='Edit Entry', font=('calibre', 10, 'bold'),
-                                     command=lambda: self.getEntry(update=True))
-        button_delete_pass = tk.Button(self.frame, text='Delete Entry', font=('calibre', 10, 'bold'),
-                                       command=lambda: self.getEntry(delete=True))
-        button_go_back = tk.Button(self.frame, text='Go Back', font=('calibre', 10, 'bold'), command=self.login)
-
-        button_show_pass.grid(row=0, column=0)
-        button_add_pass.grid(row=1, column=0)
-        button_edit_pass.grid(row=2, column=0)
-        button_delete_pass.grid(row=0, column=2)
-        button_go_back.grid(row=2, column=2)
+        button_show_pass = tk.Button(self.frame, text='Show All Entries', bg='white', font=('calibre', 10, 'bold'),
+                                     command=lambda: self.printEntries(all=True)).place(x=250, y=50)
+        button_add_pass = tk.Button(self.frame, text='Add Password', bg='white', font=('calibre', 10, 'bold'),
+                                    command=lambda: self.getEntry()).place(x=250, y=100)
+        button_edit_pass = tk.Button(self.frame, text='Edit Entry', bg='white', font=('calibre', 10, 'bold'),
+                                     command=lambda: self.getEntry(update=True)).place(x=250, y=150)
+        button_delete_pass = tk.Button(self.frame, text='Delete Entry', bg='white', font=('calibre', 10, 'bold'),
+                                       command=lambda: self.getEntry(delete=True)).place(x=250, y=200)
+        button_go_back = tk.Button(self.frame, text='Go Back', bg='white', font=('calibre', 10, 'bold'),
+                                   command=self.login).place(x=250, y=250)
 
         self.frame.mainloop()
 
@@ -181,7 +172,7 @@ class UI:
         self.clear()
 
         search_value = tk.StringVar()
-        search_label = tk.Label(self.frame, text='Search entry by username', font=('calibre', 10, 'bold'))
+        search_label = tk.Label(self.frame, text='Search entry by username', bg='white', font=('calibre', 10, 'bold'))
         search_entry = tk.Entry(self.frame, textvariable=search_value, font=('calibre', 10, 'normal'))
         search_button = tk.Button(self.frame, text='Search Entry', font=('calibre', 10, 'bold'),
                                   command=lambda: self.search(search_value))
@@ -192,16 +183,16 @@ class UI:
 
         back = tk.Button(self.frame, text='Back', font=('calibre', 10, 'bold'), command=self.show_options)
         self.entries = list(getEntries(self._id))
-        print(self.entries)
+
         i = 2
         if all:
             for obj in self.entries:
                 my_string_var = obj["username"]
-                username = tk.Label(self.frame, text='Username: ' + my_string_var, font=('calibre', 10, 'bold'))
+                username = tk.Label(self.frame, text='Username: ' + my_string_var, bg='white', font=('calibre', 10, 'bold'))
                 my_string_var = obj["password"]
-                password = tk.Label(self.frame, text='Password: ' + my_string_var, font=('calibre', 10, 'bold'))
+                password = tk.Label(self.frame, text='Password: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
                 my_string_var = obj["website"]
-                website = tk.Label(self.frame, text='website: ' + my_string_var, font=('calibre', 10, 'bold'))
+                website = tk.Label(self.frame, text='website: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
                 partition = tk.Label(self.frame, text='===========================')
 
                 username.grid(row=i, column=0)
@@ -222,13 +213,13 @@ class UI:
         if delete:
             name_var = tk.StringVar()
 
-            delete_label = tk.Label(self.frame, text='Enter the user name you want to delete',
+            delete_label = tk.Label(self.frame, text='Enter the user name you want to delete', bg='white',
                                     font=('calibre', 11, 'bold'))
 
-            name_label = tk.Label(self.frame, text='Username', font=('calibre', 10, 'bold'))
+            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
             name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
 
-            delete_button = tk.Button(self.frame, text='Delete', font=('calibre', 10, 'bold'),
+            delete_button = tk.Button(self.frame, text='Delete', bg='white', font=('calibre', 10, 'bold'),
                                       command=lambda: self.delete(name_var))
 
             delete_label.grid(row=0, column=0)
@@ -244,11 +235,11 @@ class UI:
             passw_var = tk.StringVar()
             email = tk.StringVar()
 
-            name_label = tk.Label(self.frame, text='Username', font=('calibre', 10, 'bold'))
+            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
             name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
-            passw_label = tk.Label(self.frame, text='Password', font=('calibre', 10, 'bold'))
-            passw_entry = tk.Entry(self.frame, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*')
-            email_label = tk.Label(self.frame, text='Website', font=('calibre', 10, 'bold'))
+            passw_label = tk.Label(self.frame, text='Password', bg='white', font=('calibre', 10, 'bold'))
+            passw_entry = tk.Entry(self.frame, textvariable=passw_var, bg='white', font=('calibre', 10, 'normal'), show='*')
+            email_label = tk.Label(self.frame, text='Website',bg='white', font=('calibre', 10, 'bold'))
             email_entry = tk.Entry(self.frame, textvariable=email, font=('calibre', 10, 'normal'))
             sub_btn = tk.Button(self.frame, text='Update',
                                 command=lambda: self.update(name_var, passw_var, email))
@@ -267,13 +258,13 @@ class UI:
             passw_var = tk.StringVar()
             email = tk.StringVar()
 
-            name_label = tk.Label(self.frame, text='Username', font=('calibre', 10, 'bold'))
+            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
             name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
-            passw_label = tk.Label(self.frame, text='Password', font=('calibre', 10, 'bold'))
+            passw_label = tk.Label(self.frame, text='Password',bg='white', font=('calibre', 10, 'bold'))
             passw_entry = tk.Entry(self.frame, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*')
-            email_label = tk.Label(self.frame, text='Website', font=('calibre', 10, 'bold'))
+            email_label = tk.Label(self.frame, text='Website',bg='white', font=('calibre', 10, 'bold'))
             email_entry = tk.Entry(self.frame, textvariable=email, font=('calibre', 10, 'normal'))
-            sub_btn = tk.Button(self.frame, text='Save', command=lambda: self.add(name_var, passw_var, email))
+            sub_btn = tk.Button(self.frame, text='Save',bg='white', command=lambda: self.add(name_var, passw_var, email))
 
             name_label.grid(row=1, column=0)
             name_entry.grid(row=1, column=1)
@@ -292,11 +283,11 @@ class UI:
         for dictionary in result:
             if dictionary['username'] == search_value:
                 my_string_var = dictionary["username"]
-                username = tk.Label(self.frame, text='Username: ' + my_string_var, font=('calibre', 10, 'bold'))
+                username = tk.Label(self.frame, text='Username: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
                 my_string_var = dictionary["password"]
-                password = tk.Label(self.frame, text='Password: ' + my_string_var, font=('calibre', 10, 'bold'))
+                password = tk.Label(self.frame, text='Password: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
                 my_string_var = dictionary["website"]
-                website = tk.Label(self.frame, text='website: ' + my_string_var, font=('calibre', 10, 'bold'))
+                website = tk.Label(self.frame, text='website: ' + my_string_var, bg='white', font=('calibre', 10, 'bold'))
                 partition = tk.Label(self.frame, text='===========================')
 
                 username.grid(row=i, column=0)
