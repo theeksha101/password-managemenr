@@ -1,6 +1,6 @@
 import tkinter as tk
-
-from Passobj import Passobj
+from tkinter.messagebox import showinfo
+from Record import Record
 from db import checkLogin, getEntries, signupInsert
 
 
@@ -13,6 +13,7 @@ class UI:
         self.frame.pack(side="top", expand=True, fill="both")
         self.frame.config(background='white')
         self.entries = []
+        self.msg = ''
 
     def clear(self):
         for widget in self.frame.winfo_children():
@@ -25,25 +26,26 @@ class UI:
     def welcome_screen(self):
         self.clear()
 
-        login_button = tk.Button(self.frame, text='Login', bg='white', command=self.login).place(x=250, y=50)
-        sign_up = tk.Button(self.frame, text='Sign Up', bg='white', command=self.sign_up).place(x=250, y=100)
-        go_back = tk.Button(self.frame, text='Exit', bg='white', command=self.frame.destroy).place(x=250, y=150)
+        login_button = tk.Button(self.frame, text='Login', bg='white', font=('calibre', 12, 'bold'),
+                                 command=self.login, width=20).place(x=210, y=50)
+        sign_up = tk.Button(self.frame, text='Sign Up', bg='white', font=('calibre', 12, 'bold'),
+                            command=self.sign_up, width=20).place(x=210, y=100)
+        go_back = tk.Button(self.frame, text='Exit', bg='white', font=('calibre', 12, 'bold'),
+                            command=self.frame.destroy, width=20).place(x=210, y=150)
 
         self.frame.mainloop()
 
     def show_options(self):
         self.clear()
 
-        button_show_pass = tk.Button(self.frame, text='Show All Entries', bg='white', font=('calibre', 10, 'bold'),
-                                     command=lambda: self.printEntries(all=True)).place(x=250, y=50)
-        button_add_pass = tk.Button(self.frame, text='Add Password', bg='white', font=('calibre', 10, 'bold'),
-                                    command=lambda: self.getEntry()).place(x=250, y=100)
-        button_edit_pass = tk.Button(self.frame, text='Edit Entry', bg='white', font=('calibre', 10, 'bold'),
-                                     command=lambda: self.getEntry(update=True)).place(x=250, y=150)
-        button_delete_pass = tk.Button(self.frame, text='Delete Entry', bg='white', font=('calibre', 10, 'bold'),
-                                       command=lambda: self.getEntry(delete=True)).place(x=250, y=200)
-        button_go_back = tk.Button(self.frame, text='Go Back', bg='white', font=('calibre', 10, 'bold'),
-                                   command=self.login).place(x=250, y=250)
+        button_show_pass = tk.Button(self.frame, text='Show All Entries', bg='white', font=('calibre', 12, 'bold'),
+                                     command=lambda: self.show_entries(all=True), width=20).place(x=210, y=30)
+        button_add_pass = tk.Button(self.frame, text='Add Password', bg='white', font=('calibre', 12, 'bold'), width=20,
+                                    command=lambda: self.show_add_record_menu()).place(x=210, y=80)
+        button_delete_pass = tk.Button(self.frame, text='Delete Entry', bg='white', font=('calibre', 12, 'bold'),
+                                       command=lambda: self.show_delete_menu(), width=20).place(x=210, y=130)
+        button_go_back = tk.Button(self.frame, text='Go Back', bg='white', font=('calibre', 12, 'bold'),
+                                   command=self.login, width=20).place(x=210, y=180)
 
         self.frame.mainloop()
 
@@ -56,14 +58,12 @@ class UI:
         if self._id is not None:
             self.show_options()
         else:
-            invalid_label = tk.Label(self.frame, text='Username or Password is wrong!!', font=('calibre', 10, 'bold'))
-            login_again_button = tk.Button(self.frame, text='Try Again?', font=('calibre', 10, 'bold'),
-                                           command=self.login)
-            sign_up = tk.Button(self.frame, text='Sign Up?', command=self.sign_up)
-
-            invalid_label.grid(row=1, column=1)
-            login_again_button.grid(row=2, column=1)
-            sign_up.grid(row=3, column=1)
+            invalid_label = tk.Label(self.frame, text='Username or Password is wrong!!', fg='red',
+                                     font=('calibre', 10, 'bold')).place(x=200, y=70)
+            login_again_button = tk.Button(self.frame, text='Try Again?', bg='white', font=('calibre', 10, 'bold'),
+                                           command=self.login).place(x=190, y=140)
+            sign_up = tk.Button(self.frame, text='Sign Up?', bg='white', font=('calibre', 10, 'bold'),
+                                command=self.sign_up).place(x=330, y=140)
 
             self.frame.mainloop()
 
@@ -73,22 +73,20 @@ class UI:
         name_var = tk.StringVar()
         passw_var = tk.StringVar()
 
-        login_msg = tk.Label(self.frame, text='Login', bg='white', font=('calibre', 10, 'bold'))
-        name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
-        name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
-        passw_label = tk.Label(self.frame, text='Password',  bg='white', font=('calibre', 10, 'bold'))
-        passw_entry = tk.Entry(self.frame, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*')
-        sub_btn = tk.Button(self.frame, text='Login', command=lambda: self.on_login(name_var, passw_var))
-        go_back = tk.Button(self.frame, text='Exit', command=self.frame.destroy)
-
-        login_msg.grid(row=0, column=0)
-        name_label.grid(row=1, column=0)
-        name_entry.grid(row=1, column=1)
-        passw_label.grid(row=2, column=0)
-        passw_entry.grid(row=2, column=1)
-        sub_btn.grid(row=3, column=1)
-        go_back.grid(row=3, column=2)
-
+        login_msg = tk.Label(self.frame, text='Login', fg='maroon', bg='white', font=('calibre', 15, 'bold')).place(
+            x=250, y=30)
+        name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 12, 'bold')).place(x=180, y=80)
+        name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 12, 'normal')).place(x=280, y=80)
+        name_var.set("diksha")
+        passw_label = tk.Label(self.frame, text='Password', bg='white',
+                               font=('calibre', 12, 'bold')).place(x=180, y=115)
+        passw_entry = tk.Entry(self.frame, textvariable=passw_var,
+                               font=('calibre', 12, 'normal'), show='*').place(x=280, y=115)
+        passw_var.set('0000')
+        sub_btn = tk.Button(self.frame, text='Login', font=('calibre', 11, 'bold'),
+                            command=lambda: self.on_login(name_var, passw_var)).place(x=250, y=170)
+        go_back = tk.Button(self.frame, text='Exit', font=('calibre', 11, 'bold'),
+                            command=self.welcome_screen).place(x=350, y=170)
         self.frame.mainloop()
 
     def on_sign_up(self, user_name, passw, conf_password, email_add):
@@ -138,156 +136,189 @@ class UI:
         email = tk.StringVar()
         conf_passw_var = tk.StringVar()
 
-        sign_up_msg = tk.Label(self.frame, text='Sign Up !! ', font=('calibre', 10, 'bold'))
+        sign_up_msg = tk.Label(self.frame, text='Sign Up ', fg='blue', bg='white',
+                               font=('calibre', 17, 'bold')).place(x=270, y=20)
 
-        email_label = tk.Label(self.frame, text="Email", font=('calibre', 10, 'bold'))
-        email_entry = tk.Entry(self.frame, textvariable=email, font=('calibre', 10, 'normal'))
+        email_label = tk.Label(self.frame, text="Email", bg='white',
+                               font=('calibre', 10, 'bold')).place(x=160, y=80)
+        email_entry = tk.Entry(self.frame, textvariable=email, width=30,
+                               font=('calibre', 10, 'normal')).place(x=310, y=80)
 
-        name_label = tk.Label(self.frame, text='Username', font=('calibre', 10, 'bold'))
-        name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
+        name_label = tk.Label(self.frame, text='Username', bg='white',
+                              font=('calibre', 10, 'bold')).place(x=160, y=120)
+        name_entry = tk.Entry(self.frame, textvariable=name_var, width=30,
+                              font=('calibre', 10, 'normal')).place(x=310, y=120)
 
-        passw_label = tk.Label(self.frame, text='Password', font=('calibre', 10, 'bold'))
-        passw_entry = tk.Entry(self.frame, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*')
+        passw_label = tk.Label(self.frame, text='Password', bg='white',
+                               font=('calibre', 10, 'bold')).place(x=160, y=160)
+        passw_entry = tk.Entry(self.frame, textvariable=passw_var, width=30,
+                               font=('calibre', 10, 'normal'), show='*').place(x=310, y=160)
 
-        conf_passw_label = tk.Label(self.frame, text='Confirm Password', font=('calibre', 10, 'bold'))
-        conf_passw_entry = tk.Entry(self.frame, textvariable=conf_passw_var, font=('calibre', 10, 'normal'), show='*')
+        conf_passw_label = tk.Label(self.frame, text='Confirm Password', bg='white',
+                                    font=('calibre', 10, 'bold')).place(x=160, y=200)
+        conf_passw_entry = tk.Entry(self.frame, textvariable=conf_passw_var, width=30,
+                                    font=('calibre', 10, 'normal'), show='*').place(x=310, y=200)
 
-        sign_up = tk.Button(self.frame, text='Sign Up',
-                            command=lambda: self.on_sign_up(name_var, passw_var, conf_passw_var, email))
-
-        sign_up_msg.grid(row=0, column=0)
-        email_label.grid(row=1, column=0)
-        email_entry.grid(row=1, column=1)
-        name_label.grid(row=2, column=0)
-        name_entry.grid(row=2, column=1)
-        passw_label.grid(row=3, column=0)
-        passw_entry.grid(row=3, column=1)
-        conf_passw_label.grid(row=4, column=0)
-        conf_passw_entry.grid(row=4, column=1)
-        sign_up.grid(row=6, column=1)
+        sign_up = tk.Button(self.frame, text='Sign Up', bg='white', font=('calibre', 11, 'bold'),
+                            command=lambda: self.on_sign_up(name_var, passw_var, conf_passw_var, email)).place(x=250, y=240)
+        go_back = tk.Button(self.frame, text='Exit', font=('calibre', 11, 'bold'), bg='white',
+                            command=self.welcome_screen).place(x=350, y=240)
 
         self.frame.mainloop()
 
-    def printEntries(self, all=True, website=None):
-        self.clear()
+    def show_entries(self, all=True):
 
+        self.clear()
+        # TODO: add PanedWindow to show list of buttons, beside them add Entries which will be editable and save changes
+        #  button down those entries.
         search_value = tk.StringVar()
-        search_label = tk.Label(self.frame, text='Search entry by username', bg='white', font=('calibre', 10, 'bold'))
-        search_entry = tk.Entry(self.frame, textvariable=search_value, font=('calibre', 10, 'normal'))
-        search_button = tk.Button(self.frame, text='Search Entry', font=('calibre', 10, 'bold'),
+
+        paned_window = tk.PanedWindow(self.frame, orient=tk.VERTICAL)
+        paned_window.pack(fill=tk.BOTH, expand=True)
+
+        top_frame = tk.Frame(paned_window, width=300, height=20, relief=tk.SUNKEN)
+
+        search_label = tk.Label(top_frame, text='Search entry by website', font=('calibre', 15, 'bold'))
+        search_entry = tk.Entry(top_frame, textvariable=search_value, bd=4, width=50,
+                                font=('calibre', 10, 'normal'))
+        search_button = tk.Button(top_frame, text='Search Entry', bg='white', bd=3, font=('calibre', 12, 'bold'),
+                                  width=50,
                                   command=lambda: self.search(search_value))
 
-        search_label.grid(row=0, column=0)
-        search_entry.grid(row=1, column=0)
-        search_button.grid(row=1, column=1)
+        search_label.pack(side=tk.TOP, fill=tk.BOTH)
+        search_entry.pack(side=tk.LEFT, ipadx=0, ipady=0, fill=tk.BOTH, expand=True)
+        search_button.pack(side=tk.RIGHT, fill=tk.BOTH)
 
-        back = tk.Button(self.frame, text='Back', font=('calibre', 10, 'bold'), command=self.show_options)
         self.entries = list(getEntries(self._id))
 
-        i = 2
+        bottom_frame = tk.Frame(paned_window, width=300, height=500, relief=tk.SUNKEN)
+
+        listbox = tk.Listbox(bottom_frame, width=40)
+        scrollbar = tk.Scrollbar(bottom_frame)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+        scrollbar.pack(side=tk.LEFT, fill=tk.BOTH)
+
+        listbox.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=listbox.yview)
+
+        name_label = tk.Label(bottom_frame, text='Username', font=('calibre', 12, 'bold'))
+        name_var = tk.StringVar()
+        name = tk.Entry(bottom_frame, bd=4, width=50, textvariable=name_var,
+                        font=('calibre', 10, 'normal'))
+
+        pass_label = tk.Label(bottom_frame, text='Password', font=('calibre', 12, 'bold'))
+        password_var = tk.StringVar()
+        passw = tk.Entry(bottom_frame, bd=4, width=50, textvariable=password_var,
+                         font=('calibre', 10, 'normal'))
+
+        web_label = tk.Label(bottom_frame, text='Website', font=('calibre', 12, 'bold'))
+        web_var = tk.StringVar()
+        web = tk.Label(bottom_frame, bd=5, width=50, textvariable=web_var, bg='white',
+                       font=('calibre', 11, 'normal'))
+
+        name_label.pack(side=tk.TOP, fill=tk.BOTH)
+        name.pack(side=tk.TOP, fill=tk.BOTH)
+        pass_label.pack(side=tk.TOP, fill=tk.BOTH)
+        passw.pack(side=tk.TOP, fill=tk.BOTH)
+        web_label.pack(side=tk.TOP, fill=tk.BOTH)
+        web.pack(side=tk.TOP, fill=tk.BOTH)
+        back = tk.Button(bottom_frame, text='Back', bg='white', bd=4, font=('calibre', 12, 'bold'),
+                         command=self.show_options)
+        update_button = tk.Button(bottom_frame, text='Update', bd=4, font=('calibre', 12, 'bold'),
+                                  command=lambda: self.update(name_var.get(), password_var.get(), web_var.get())
+                                  )
+
+        back.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        update_button.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        i = 0
         if all:
             for obj in self.entries:
-                my_string_var = obj["username"]
-                username = tk.Label(self.frame, text='Username: ' + my_string_var, bg='white', font=('calibre', 10, 'bold'))
-                my_string_var = obj["password"]
-                password = tk.Label(self.frame, text='Password: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
-                my_string_var = obj["website"]
-                website = tk.Label(self.frame, text='website: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
-                partition = tk.Label(self.frame, text='===========================')
+                web_name = obj['website']
+                listbox.insert(i, web_name)
+                i += 1
 
-                username.grid(row=i, column=0)
-                i += 1
-                password.grid(row=i, column=0)
-                i += 1
-                website.grid(row=i, column=0)
-                i += 1
-                partition.grid(row=i, column=0)
-                i += 1
-            back.grid(row=4, column=1)
+        paned_window.add(top_frame)
+        paned_window.add(bottom_frame)
 
-            return
+        def items_selected(event):
 
-    def getEntry(self, update=False, delete=False):
+            selected_indices = listbox.curselection()
+
+            selected_langs = ",".join([listbox.get(i) for i in selected_indices])
+            self.msg = selected_langs
+
+            result = list(Record(username='', password='', website='', search_value=self.msg).search())
+            dictionary = result[0]
+
+            user_name = dictionary['username']
+            password = dictionary['password']
+            website = dictionary['website']
+
+            name_var.set(user_name)
+            password_var.set(password)
+            web_var.set(website)
+
+        listbox.bind('<<ListboxSelect>>', items_selected)
+
+    def show_delete_menu(self):
         self.clear()
+        name_var = tk.StringVar()
 
-        if delete:
-            name_var = tk.StringVar()
+        delete_label = tk.Label(self.frame, text='Enter the user name you want to delete', fg='red', bg='white',
+                                font=('calibre', 15, 'bold')).place(x=100, y=30)
 
-            delete_label = tk.Label(self.frame, text='Enter the user name you want to delete', bg='white',
-                                    font=('calibre', 11, 'bold'))
+        name_label = tk.Label(self.frame, text='Username', bg='white',
+                              font=('calibre', 12, 'bold')).place(x=150, y=80)
+        name_entry = tk.Entry(self.frame, textvariable=name_var,
+                              font=('calibre', 12, 'normal')).place(x=270, y=80)
 
-            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
-            name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
+        delete_button = tk.Button(self.frame, text='Delete', bg='white', font=('calibre', 10, 'bold'),
+                                  command=lambda: self.on_delete(name_var)).place(x=250, y=150)
+        back_btn = tk.Button(self.frame, text='Back', font=('calibre', 11, 'bold'), bg='white',
+                             command=self.show_options).place(x=360, y=150)
 
-            delete_button = tk.Button(self.frame, text='Delete', bg='white', font=('calibre', 10, 'bold'),
-                                      command=lambda: self.delete(name_var))
+    def show_add_record_menu(self):
+        self.clear()
+        name_var = tk.StringVar()
+        passw_var = tk.StringVar()
+        email = tk.StringVar()
 
-            delete_label.grid(row=0, column=0)
-            name_label.grid(row=1, column=0)
-            name_entry.grid(row=2, column=0)
-            delete_button.grid(row=3, column=0)
-            return
-
-        if update:
-            self.clear()
-
-            name_var = tk.StringVar()
-            passw_var = tk.StringVar()
-            email = tk.StringVar()
-
-            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
-            name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
-            passw_label = tk.Label(self.frame, text='Password', bg='white', font=('calibre', 10, 'bold'))
-            passw_entry = tk.Entry(self.frame, textvariable=passw_var, bg='white', font=('calibre', 10, 'normal'), show='*')
-            email_label = tk.Label(self.frame, text='Website',bg='white', font=('calibre', 10, 'bold'))
-            email_entry = tk.Entry(self.frame, textvariable=email, font=('calibre', 10, 'normal'))
-            sub_btn = tk.Button(self.frame, text='Update',
-                                command=lambda: self.update(name_var, passw_var, email))
-            print(self.entries)
-            name_label.grid(row=1, column=0)
-            name_entry.grid(row=1, column=1)
-            passw_label.grid(row=2, column=0)
-            passw_entry.grid(row=2, column=1)
-            email_label.grid(row=3, column=0)
-            email_entry.grid(row=3, column=1)
-            sub_btn.grid(row=4, column=1)
-
-        else:
-            self.clear()
-            name_var = tk.StringVar()
-            passw_var = tk.StringVar()
-            email = tk.StringVar()
-
-            name_label = tk.Label(self.frame, text='Username', bg='white', font=('calibre', 10, 'bold'))
-            name_entry = tk.Entry(self.frame, textvariable=name_var, font=('calibre', 10, 'normal'))
-            passw_label = tk.Label(self.frame, text='Password',bg='white', font=('calibre', 10, 'bold'))
-            passw_entry = tk.Entry(self.frame, textvariable=passw_var, font=('calibre', 10, 'normal'), show='*')
-            email_label = tk.Label(self.frame, text='Website',bg='white', font=('calibre', 10, 'bold'))
-            email_entry = tk.Entry(self.frame, textvariable=email, font=('calibre', 10, 'normal'))
-            sub_btn = tk.Button(self.frame, text='Save',bg='white', command=lambda: self.add(name_var, passw_var, email))
-
-            name_label.grid(row=1, column=0)
-            name_entry.grid(row=1, column=1)
-            passw_label.grid(row=2, column=0)
-            passw_entry.grid(row=2, column=1)
-            email_label.grid(row=3, column=0)
-            email_entry.grid(row=3, column=1)
-            sub_btn.grid(row=4, column=1)
-        return
+        add_label = tk.Label(self.frame, text='Enter Username and Password', bg='white',
+                             font=('calibre', 15, 'bold')).place(x=200, y=30)
+        name_label = tk.Label(self.frame, text='Username', bg='white',
+                              font=('calibre', 12, 'bold')).place(x=180, y=80)
+        name_entry = tk.Entry(self.frame, textvariable=name_var,
+                              font=('calibre', 12, 'normal')).place(x=280, y=80)
+        passw_label = tk.Label(self.frame, text='Password', bg='white',
+                               font=('calibre', 12, 'bold')).place(x=180, y=115)
+        passw_entry = tk.Entry(self.frame, textvariable=passw_var,
+                               font=('calibre', 12, 'normal'), show='*').place(x=280, y=115)
+        email_label = tk.Label(self.frame, text='Website', bg='white',
+                               font=('calibre', 12, 'bold')).place(x=180, y=150)
+        email_entry = tk.Entry(self.frame, textvariable=email,
+                               font=('calibre', 12, 'normal')).place(x=280, y=150)
+        sub_btn = tk.Button(self.frame, text='Save', font=('calibre', 11, 'bold'),
+                            command=lambda: self.add(name_var.get(), passw_var.get(), email.get())).place(x=260, y=190)
+        back_btn = tk.Button(self.frame, text='Back', font=('calibre', 11, 'bold'),
+                             command=self.show_options).place(x=350, y=190)
 
     def search(self, search):
         self.clear()
         search_value = search.get()
-        result = list(Passobj(username='', password='', website='', search_value=search_value).search())
+        result = list(Record(username='', password='', website='', search_value=search_value).search())
+        print(result)
         i = 1
         for dictionary in result:
-            if dictionary['username'] == search_value:
+            if dictionary['website'] == search_value:
                 my_string_var = dictionary["username"]
-                username = tk.Label(self.frame, text='Username: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
+                username = tk.Label(self.frame, text='Username: ' + my_string_var, bg='white',
+                                    font=('calibre', 10, 'bold'))
                 my_string_var = dictionary["password"]
-                password = tk.Label(self.frame, text='Password: ' + my_string_var,bg='white', font=('calibre', 10, 'bold'))
+                password = tk.Label(self.frame, text='Password: ' + my_string_var, bg='white',
+                                    font=('calibre', 10, 'bold'))
                 my_string_var = dictionary["website"]
-                website = tk.Label(self.frame, text='website: ' + my_string_var, bg='white', font=('calibre', 10, 'bold'))
+                website = tk.Label(self.frame, text='website: ' + my_string_var, bg='white',
+                                   font=('calibre', 10, 'bold'))
                 partition = tk.Label(self.frame, text='===========================')
 
                 username.grid(row=i, column=0)
@@ -298,12 +329,15 @@ class UI:
                 i += 1
                 partition.grid(row=i, column=0)
                 i += 1
-        go_back = tk.Button(self.frame, text='Back', font=('calibre', 10, 'bold'), command=self.show_options)
-        go_back.grid(row=1, column=2)
+            elif dictionary['website'] != search_value:
+                showinfo(message='**No such entry**')
+
+        go_back = tk.Button(self.frame, text='Back', font=('calibre', 10, 'bold'), command=self.show_entries)
+        go_back.grid(row=6, column=0)
 
     def show(self, website):
         website = website.get()
-        Passobj(username='', password='', website=website).delete()
+        Record(username='', password='', website=website).delete()
 
         saved_msg = tk.Label(self.frame, text='Deleted !', font=('calibre', 10, 'bold'))
         go_back = tk.Button(self.frame, text='Go Back', command=self.show_options)
@@ -312,44 +346,50 @@ class UI:
         go_back.grid(row=1, column=1)
 
     def add(self, username, password, website):
-        self.clear()
-        user_name = username.get()
-        pass_word = password.get()
-        website = website.get()
 
-        Passobj(user_name, pass_word, website).save()
+        if username == "" or password == "":
+            showinfo(
+                title='Error',
+                message='Username Password can not be empty')
+        else:
+            Record(username, password, website).save()
+            showinfo(message='Information has been saved successfully')
 
-        saved_msg = tk.Label(self.frame, text='Saved !', font=('calibre', 10, 'bold'))
-        go_back = tk.Button(self.frame, text='Go Back', command=self.show_options)
+        # Record(user_name, pass_word, website).save()
 
-        saved_msg.grid(row=0, column=1)
-        go_back.grid(row=4, column=2)
+        # saved_msg = tk.Label(self.frame, text='Entry saved successfully!!', fg='green',
+        #                      font=('calibre', 15, 'bold')).place(x=250, y=50)
+        # go_back = tk.Button(self.frame, text='Go Back', command=self.show_options).place(x=250, y=100)
 
-    def delete(self, username):
+    def on_delete(self, username):
         username = username.get()
-        Passobj(username, password='', website='').delete()
+        if username == "":
+            showinfo(
+                title='Error',
+                message='Username can not be empty')
+        else:
+            Record(username, password='', website='').save()
+            showinfo(message='Information has been successfully deleted')
+        # Record(username, password='', website='').delete()
+        #
+        # saved_msg = tk.Label(self.frame, text='Entry by the name ' + username + ' has been deleted',
+        #                      font=('calibre', 10, 'bold'))
+        # go_back = tk.Button(self.frame, text='Go Back', command=self.show_options, font=('calibre', 10, 'bold'))
+        #
+        # saved_msg.grid(row=4, column=0)
+        # go_back.grid(row=3, column=2)
 
-        saved_msg = tk.Label(self.frame, text='Entry by the name ' + username + ' has been deleted',
-                             font=('calibre', 10, 'bold'))
-        go_back = tk.Button(self.frame, text='Go Back', command=self.show_options, font=('calibre', 10, 'bold'))
+    def update(self, name_var, pass_var, website):
+        msg = 'Entry Updated!'
 
-        saved_msg.grid(row=4, column=0)
-        go_back.grid(row=3, column=2)
+        if name_var.strip() == "" or pass_var.strip() == "":
+            msg = "Username, password cannot be empty"
+        else:
+            Record(name_var, pass_var, website).update()
 
-    def update(self, name_var, pass_var, email):
-        self.clear()
-
-        username = name_var.get()
-        password = pass_var.get()
-        website = email.get()
-
-        Passobj(username, password, website).update()
-
-        updated_msg = tk.Label(self.frame, text='Password Updated!', font=('calibre', 10, 'bold'))
-        go_back = tk.Button(self.frame, text='Go Back', command=self.show_options)
-
-        updated_msg.grid(row=0, column=1)
-        go_back.grid(row=4, column=2)
+        showinfo(
+            title='Information',
+            message=msg)
 
 
 if __name__ == '__main__':
