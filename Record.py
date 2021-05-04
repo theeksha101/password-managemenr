@@ -31,8 +31,3 @@ class Record:
         result = self.collection.find({"website": self.search_value})
         return result
 
-    def statistics(self):
-        raise Exception("Feature not implemented yet")
-        return {
-            "users": 20
-        }
