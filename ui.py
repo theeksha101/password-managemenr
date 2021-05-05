@@ -355,12 +355,6 @@ class UI:
             Record(username, password, website).save()
             showinfo(message='Information has been saved successfully')
 
-        # Record(user_name, pass_word, website).save()
-
-        # saved_msg = tk.Label(self.frame, text='Entry saved successfully!!', fg='green',
-        #                      font=('calibre', 15, 'bold')).place(x=250, y=50)
-        # go_back = tk.Button(self.frame, text='Go Back', command=self.show_options).place(x=250, y=100)
-
     def on_delete(self, username):
         username = username.get()
         if username == "":
@@ -370,14 +364,6 @@ class UI:
         else:
             Record(username, password='', website='').save()
             showinfo(message='Information has been successfully deleted')
-        # Record(username, password='', website='').delete()
-        #
-        # saved_msg = tk.Label(self.frame, text='Entry by the name ' + username + ' has been deleted',
-        #                      font=('calibre', 10, 'bold'))
-        # go_back = tk.Button(self.frame, text='Go Back', command=self.show_options, font=('calibre', 10, 'bold'))
-        #
-        # saved_msg.grid(row=4, column=0)
-        # go_back.grid(row=3, column=2)
 
     def update(self, name_var, pass_var, website):
         msg = 'Entry Updated!'
